@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokedex Mockup</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+        display: flex;
+        lign-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #838080;
+    }
+
+    #pokedex {
+        max-width: 600px;
+        padding: 20px;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        background-color: #f15d5d;
+    }
+
+    #pokemonImage {
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+
+    #abilitiesList {
+      list-style-type: none;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pokedex">
+    <h1>Pokedex</h1>
+    <label for="pokemonInput">Enter Pokemon Name:</label>
+    <input type="text" id="pokemonInput" placeholder="e.g., pikachu">
+    <button onclick="getPokemonData()">Search</button>
+
+    <div id="pokemonInfo">
+      <h2 id="pokemonName"></h2>
+      <img id="pokemonImage" alt="Pokemon Image">
+      <h3>Abilities:</h3>
+      <ul id="abilitiesList"></ul>
+    </div>
+  </div>
+
+  <script>
+    async function getPokemonData() {
+      const pokemonName = document.getElementById('pokemonInput').value.toLowerCase();
+      const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonName}/`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // Update HTML elements with Pokemon data
+        document.getElementById('pokemonName').textContent = data.name;
+        document.getElementById('pokemonImage').src = data.sprites.front_default;
+
+        const abilitiesList = document.getElementById('abilitiesList');
+        abilitiesList.innerHTML = '';
+        data.abilities.forEach(ability => {
+          const li = document.createElement('li');
+          li.textContent = ability.ability.name;
+          abilitiesList.appendChild(li);
+        });
+
+        document.getElementById('pokemonInfo').style.display = 'block';
+      } catch (error) {
+        console.error('Error fetching Pokemon data:', error);
+        alert('Error fetching Pokemon data. Please try again.');
+      }
+    }
+  </script>
+
+</body>
+</html>
